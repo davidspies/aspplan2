@@ -1,0 +1,66 @@
+name:                mutex
+version:             0.1.0.0
+github:              "davidspies/mutex"
+license:             BSD3
+author:              "David Spies"
+maintainer:          "dnspies@gmail.com"
+copyright:           "2018 David Spies"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/davidspies/aspplan/hworkspace/mutex#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- imap
+- aeson
+- bytestring
+- clingo
+- containers
+- parsec
+- text
+
+default-extensions:
+- DefaultSignatures
+- DeriveFunctor
+- DeriveGeneric
+- DerivingStrategies
+- FlexibleContexts
+- FlexibleInstances
+- GeneralizedNewtypeDeriving
+- LambdaCase
+- NamedFieldPuns
+- OverloadedStrings
+- RecordWildCards
+- ScopedTypeVariables
+- TupleSections
+- TypeSynonymInstances
+- ViewPatterns
+
+ghc-options:
+- -Werror
+- -Wall
+
+
+library:
+  source-dirs: src
+
+tests:
+  mutex-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - mutex
