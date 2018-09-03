@@ -40,20 +40,21 @@ probify :: [PureSymbol] -> Prob PureSymbol PureSymbol
 probify fs = Prob {..}
  where
   partitioned  = partitionByName fs
-  fluents = Fluent.generateMap . map fromSingleton $ partitioned !^ "fluent"
+  fluents = Fluent.generateMap $ map fromSingleton (lookupPartitioned "fluent")
   fluentByName = Map.fromList . map swap $ IMap.toList fluents
   inits        = ISet.fromList
-    $ map ((fluentByName !^) . fromSingleton) (partitioned !^ "init")
+    $ map ((fluentByName !^) . fromSingleton) (lookupPartitioned "init")
+  lookupPartitioned k = Map.findWithDefault [] k partitioned
   mkRelation :: Text -> Map PureSymbol (ISet FluentId)
   mkRelation cat = Map.fromListWith ISet.union $ map
     (second (ISet.singleton . (fluentByName !^)) . fromDoubleton)
-    (partitioned !^ cat)
+    (lookupPartitioned cat)
   pres, adds, dels :: Map PureSymbol (ISet FluentId)
   pres = mkRelation "pre"
   adds = mkRelation "add"
   dels = mkRelation "del"
   actions =
-    Act.generateMap $ map (mkFn . fromSingleton) $ partitioned !^ "action"
+    Act.generateMap $ map (mkFn . fromSingleton) $ lookupPartitioned "action"
   mkFn :: PureSymbol -> Action PureSymbol
   mkFn name = Action
     { name
@@ -94,9 +95,10 @@ mcRules mcs = do
 mutexRule :: (PureSymbol, PureSymbol) -> PureSymbol
 mutexRule (x, y) = function "mutex" [x, y]
 
-(!^) :: (HasCallStack, Ord k) => Map k v -> k -> v
-(!^) m k =
-  fromMaybe (error "!^: given key is not an element in the map") (m Map.!? k)
+(!^) :: (HasCallStack, Show k, Ord k) => Map k v -> k -> v
+(!^) m k = fromMaybe
+  (error $ "!^: given key is not an element in the map: " ++ show k)
+  (m Map.!? k)
 
 genMutex :: [PureSymbol] -> ([PureSymbol], [(PureSymbol, PureSymbol)])
 genMutex inp =
