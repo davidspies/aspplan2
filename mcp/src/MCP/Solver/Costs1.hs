@@ -33,7 +33,7 @@ solve inp rev = do
         hasUseSuffix <- m `contains` useSuffix
         syms         <- modelSymbols m selectNone { selectShown = True }
         let pureSyms = map Clingo.toPureSymbol syms
-        cost <- Cost . head <$> costVector m
+        cost <- Cost <$> costVector m
         return (pureSyms, cost, hasUseSuffix)
       case res of
         Nothing -> return $ Just $ formatSolution rev Nothing

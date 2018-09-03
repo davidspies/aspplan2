@@ -48,7 +48,7 @@ stepping act = fmap fromJust $ firstJustM [(0 :: MakeSpan) ..] $ \i -> do
 
   act i
 
-data Cost = Cost Integer | Infinity
+data Cost = Cost [Integer] | Infinity
   deriving (Eq, Ord, Show)
 
 solveAwaitLastModel
@@ -63,7 +63,7 @@ solveAwaitLastModel stoppingCost f =
           Nothing  -> return previous
           Just res -> do
             n    <- f res
-            cost <- Cost . head <$> costVector res
+            cost <- Cost <$> costVector res
             if maybe False (cost <=) stoppingCost
               then return (Just n)
               else do

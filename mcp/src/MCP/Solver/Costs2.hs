@@ -55,7 +55,7 @@ newSolutionVar = atomically $ do
   return SolutionVar {..}
 
 bestLowerBound :: Map MakeSpan Cost -> MakeSpan -> Cost
-bestLowerBound m makeSpan = maybe (Cost 0) snd $ Map.lookupLE makeSpan m
+bestLowerBound m makeSpan = maybe (Cost []) snd $ Map.lookupLE makeSpan m
 
 (<&>) :: Functor f => f a -> (a -> b) -> f b
 (<&>) = flip (<$>)
@@ -114,7 +114,7 @@ variant1 inp sv = do
                 syms <- lift $ map Clingo.toPureSymbol <$> modelSymbols
                   m
                   Model.selectNone { Model.selectShown = True }
-                cost <- lift $ Cost . head <$> Model.costVector m
+                cost <- lift $ Cost <$> Model.costVector m
                 mapExceptT liftIO $ newBestModel Model {..} sv
                 lift $ Clingo.solverResume solver
                 go
@@ -133,7 +133,7 @@ variant2 inp sv@SolutionVar { lowerBound } = do
       res <- solveAwaitLastModel (Just $ bestLowerBound lb makeSpan) $ \m -> do
         useSuffix    <- Clingo.createFunction "useSuffix" [] True
         hasUseSuffix <- m `Model.contains` useSuffix
-        cost         <- Cost . head <$> Model.costVector m
+        cost         <- Cost <$> Model.costVector m
         if hasUseSuffix
           then return $ Left cost
           else do
