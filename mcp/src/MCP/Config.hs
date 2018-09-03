@@ -88,6 +88,6 @@ data Config
   = ParseDomain Domain
   | ParseProblem Problem
   | Parse DomainProblem
-  | Ground{grounded :: Grounded, mutexOnly :: Bool}
+  | Ground Grounded
   | Solve Pipeline
   deriving (Show, Generic, FromJSON, ToJSON)

@@ -44,11 +44,11 @@ main = do
   [cfgFileName] <- getArgs
   cfg           <- Yaml.decodeThrow =<< BS.readFile cfgFileName
   case cfg of
-    ParseDomain  domain            -> runParseDomain domain
-    ParseProblem problem           -> runParseProblem problem
-    Parse        domainProblem     -> runParseDomainProblem domainProblem
-    Ground { grounded, mutexOnly } -> runGround grounded mutexOnly
-    Solve pipeline                 -> runSolve pipeline
+    ParseDomain  domain        -> runParseDomain domain
+    ParseProblem problem       -> runParseProblem problem
+    Parse        domainProblem -> runParseDomainProblem domainProblem
+    Ground       grounded      -> runGround grounded
+    Solve        pipeline      -> runSolve pipeline
 
 parseDomain :: Domain -> IO PDDL.Domain
 parseDomain = \case
@@ -108,7 +108,7 @@ runParseDomainProblem dp = do
     Nothing -> error "All inputs already ASP"
     Just t' -> Text.putStrLn t'
 
-groundSymbols :: Grounded -> IO ([PureSymbol], [PureSymbol], ReverseMap)
+groundSymbols :: Grounded -> IO ([PureSymbol], ReverseMap)
 groundSymbols Grounded { input, mutexType } = do
   aspPath <- getASPPath
   let buildasp = [ASPFile $ aspPath </> "build.asp"]
@@ -121,13 +121,13 @@ groundSymbols Grounded { input, mutexType } = do
     From dp -> do
       (inp, rev) <- parseDomainProblem dp
       (, rev) <$> runClingoBase (inp <> ASPInput buildasp Nothing)
-  pure (grounded, mutexHandling mutexType grounded, rev)
+  let newGrounded = mutexHandling mutexType grounded
+  pure (newGrounded, rev)
 
-runGround :: Grounded -> Bool -> IO ()
-runGround grounded mutexOnly = do
-  (descr, mutexes, _) <- groundSymbols grounded
-  PP.displayIO stdout
-    $ docRules (if mutexOnly then mutexes else descr ++ mutexes)
+runGround :: Grounded -> IO ()
+runGround grounded = do
+  (descr, _) <- groundSymbols grounded
+  PP.displayIO stdout $ docRules descr
 
 runSolve :: Pipeline -> IO ()
 runSolve Pipeline { solver, grounded } = do
@@ -135,12 +135,9 @@ runSolve Pipeline { solver, grounded } = do
     Stdin         -> (, mempty) . ASPInput [] . Just <$> Text.getContents
     InputFiles fs -> pure (ASPInput fs Nothing, mempty)
     From       x  -> do
-      (g, mutex, rev) <- groundSymbols x
+      (g, rev) <- groundSymbols x
       return
-        ( ASPInput [] . Just . LText.toStrict . PP.displayT $ docRules
-          (g ++ mutex)
-        , rev
-        )
+        (ASPInput [] . Just . LText.toStrict . PP.displayT $ docRules g, rev)
   descr <- evaluate $ force descrU
   traceM "Begin solving"
   case solver of
@@ -155,10 +152,18 @@ putStrLnAndClose s = do
   hClose stdout
 
 mutexHandling :: MutexType -> [PureSymbol] -> [PureSymbol]
-mutexHandling = \case
-  None         -> const []
-  Direct       -> map mutexRule . snd . genMutex
-  Multicliques -> mcRules . uncurry makeMCs . genMutex
+mutexHandling mt syms = case mt of
+  None         -> syms
+  Direct       -> symsModified ++ map mutexRule muts
+  Multicliques -> symsModified ++ mcs
+ where
+  (newFluents, muts) = genMutex syms
+  isFluent           = \case
+    PureFunction "fluent" [_] True -> True
+    _                              -> False
+  mkFluent x = PureFunction "fluent" [x] True
+  symsModified = map mkFluent newFluents ++ filter (not . isFluent) syms
+  mcs          = mcRules (makeMCs newFluents muts)
 
 runClingoBase :: ASPInput -> IO [PureSymbol]
 runClingoBase inp = Clingo.withDefaultClingo $ do

@@ -100,10 +100,12 @@ mutexRule (x, y) = function "mutex" [x, y]
 
 genMutex :: [PureSymbol] -> ([PureSymbol], [(PureSymbol, PureSymbol)])
 genMutex inp =
-  ( IMap.elems fluents
-  , map (\(a, b) -> (fluents IMap.! a, fluents IMap.! b)) (mutex prob)
+  ( IMap.elems (fluents `IMap.restrictKeys` fs)
+  , map (\(a, b) -> (fluents IMap.! a, fluents IMap.! b)) ms
   )
-  where prob@Prob { fluents } = probify inp
+ where
+  (fs, ms)              = mutex prob
+  prob@Prob { fluents } = probify inp
 
 makeMCs :: Ord vert => [vert] -> [(vert, vert)] -> [[[vert]]]
 makeMCs fluents muts = map (retrieveMCLabels labels) (findCover g)

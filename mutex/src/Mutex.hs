@@ -60,11 +60,11 @@ converge f = go (0 :: Int)
       $ let y = f x
         in  if x == y then trace "mutex finished" x else go (count + 1) y
 
-mutex :: Prob act fluent -> [Mutex]
-mutex prob@Prob { fluents, actions, inits } = BiMap.toList $ mutexFF $ converge
-  go
-  (start inits)
+mutex :: Prob act fluent -> (ISet FluentId, [Mutex])
+mutex prob@Prob { fluents, actions, inits } =
+  (validFluents result, BiMap.toList $ mutexFF result)
  where
+  result        = converge go (start inits)
   adds          = IMap.map Act.add actions
   Inverted {..} = inversions prob
   go :: State -> State
@@ -80,12 +80,10 @@ mutex prob@Prob { fluents, actions, inits } = BiMap.toList $ mutexFF $ converge
    where
     newActs = ISet.fromList
       [ aid
-      | (aid, Action {pre}) <- IMap.toList actions
+      | (aid, Action { pre }) <- IMap.toList actions
       , pre `ISet.isSubsetOf` validFluents
       , BiMap.null
-        $                   IMap.map (`ISet.intersection` pre)
-        $                   mutexFF
-        `IMap.restrictKeys` pre
+        $ IMap.map (`ISet.intersection` pre) (mutexFF `IMap.restrictKeys` pre)
       ]
     newFluents =
       ISet.unions $ validFluents : IMap.elems (IMap.restrictKeys adds newActs)
