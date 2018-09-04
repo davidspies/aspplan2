@@ -16,6 +16,7 @@ fluent(F) :- needed(fluent(F)); fluentp(F); deletable(F).
 
 init(F) :- initp(F); fluent(F).
 goal(F) :- goalp(F); fluent(F).
+goal(F) :- goalp(F); not initp(F).
 
 pre(A,F) :- action(A); fluent(F); prep(A,F).
 add(A,F) :- action(A); fluent(F); addp(A,F); not prep(A,F).

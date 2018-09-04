@@ -4,6 +4,7 @@ module PDDLParser.Parse.Problem
   )
 where
 
+import           Data.Maybe                     ( fromMaybe )
 import qualified Data.Text                     as Text
 import           Data.Text.Lazy                 ( Text )
 import           Prelude                 hiding ( init )
@@ -11,9 +12,7 @@ import           Prelude                 hiding ( init )
 import           Control.Applicative            ( (<|>) )
 import           Control.Monad
 import           Text.Parsec.Text.Lazy          ( Parser )
-import           Text.Parsec                    ( option
-                                                , try
-                                                )
+import           Text.Parsec                    ( try )
 
 import           PDDLParser.Parse.Shared
 import           PDDLParser.PDDL
@@ -46,7 +45,7 @@ problem d = do
             ++ show domainName'
     objects  <- objects'
     inits    <- inits'
-    goals    <- taggedItem "goal" (gd identifier)
+    goals    <- taggedListItem "goal" (gd identifier)
     optimize <- isOptimize
     return Problem {name = probName, ..}
 
@@ -63,12 +62,12 @@ init =
     <|> (InitFluent <$> atomicFormula identifier)
 
 objects' :: Parser [Typed Name]
-objects' = taggedItem "objects" $ typedList identifier
+objects' = taggedListItem "objects" $ typedList identifier
 
 isOptimize :: Parser Bool
-isOptimize = option
-  False
-  (try $ taggedItem "metric" $ do
+isOptimize = fmap
+  (fromMaybe False)
+  (taggedItem "metric" $ do
     void $ string "minimize"
     void $ parens $ string "total-cost"
     return True

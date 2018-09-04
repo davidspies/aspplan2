@@ -11,6 +11,7 @@ module PDDLParser.Parse.Shared
   , whiteSpace
   , taggedItem
   , taggedList
+  , taggedListItem
   , typedList
   )
 where
@@ -18,6 +19,7 @@ where
 import           Control.Monad
 import           Data.Char
 import           Data.Functor.Identity          ( Identity )
+import           Data.Maybe                     ( fromMaybe )
 import           Data.Text.Lazy                 ( Text )
 import qualified Data.Text.Lazy                as Text
 import qualified Data.Text                     as SText
@@ -58,12 +60,23 @@ parseOrErr :: Parsec Text () a -> String -> Text -> a
 parseOrErr p filename = either (error . show) id . parse p filename
 
 taggedList :: Text -> Parser a -> Parser [a]
-taggedList name = taggedItem name . many
+taggedList name = taggedListItem name . many
 
-taggedItem :: Text -> Parser a -> Parser a
-taggedItem name item = parens $ do
-  void $ string (":" <> name)
-  item
+taggedListItem :: Text -> Parser [a] -> Parser [a]
+taggedListItem name = fmap (fromMaybe []) . taggedItem name
+
+taggedItem :: Text -> Parser a -> Parser (Maybe a)
+taggedItem name item = do
+  v <- option False $ try $ do
+    void $ string "("
+    void $ string (":" <> name)
+    return True
+  if v
+    then do
+      res <- item
+      void $ string ")"
+      return $ Just res
+    else return Nothing
 
 typedList :: forall a . Parser a -> Parser [Typed a]
 typedList v = go []

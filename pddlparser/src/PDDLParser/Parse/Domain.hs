@@ -26,16 +26,16 @@ domain = do
     domainName <- parens $ do
       void $ string "domain"
       identifier
-    requirements <- option [Strips] (try parseAndCheckRequirements)
-    types        <- option [] (try types')
-    constants    <- option [] (try constants')
+    requirements <- parseAndCheckRequirements
+    types        <- types'
+    constants    <- constants'
     predicates   <- predicates'
-    functions    <- option [] (try functions')
+    functions    <- functions'
     actions      <- many action
     return Domain {name = domainName, ..}
 
 types' :: Parser [Typed Name]
-types' = taggedItem "types" $ typedList identifier
+types' = taggedListItem "types" $ typedList identifier
 
 parseAndCheckRequirements :: Parser [Requirement]
 parseAndCheckRequirements = do
@@ -49,7 +49,7 @@ requirements' :: Parser [Requirement]
 requirements' = taggedList "requirements" requirement
 
 constants' :: Parser [Typed Name]
-constants' = taggedItem "constants" $ typedList identifier
+constants' = taggedListItem "constants" $ typedList identifier
 
 predicates' :: Parser [Predicate]
 predicates' = taggedList "predicates" predicate
@@ -63,8 +63,9 @@ variable = do
   Variable <$> identifier
 
 functions' :: Parser [Function Variable]
-functions' = taggedItem "functions" $ mapM (checkType "number") =<< typedList
-  (function variable)
+functions' =
+  taggedListItem "functions" $ mapM (checkType "number") =<< typedList
+    (function variable)
 
 checkType :: Name -> Typed a -> Parser a
 checkType expected = \case
@@ -79,9 +80,10 @@ function t = parens $ Function <$> identifier <*> typedList t
 action :: Parser Action
 action = parens $ do
   void $ string ":action"
-  name <- identifier
-  void $ string ":parameters"
-  parameters <- parens $ typedList variable
+  name       <- identifier
+  parameters <- do
+    isParams <- option False (try $ string ":parameters" >> return True)
+    if isParams then parens $ typedList variable else return []
   void $ string ":precondition"
   preconditions <- emptyOr (gd term)
   void $ string ":effect"
