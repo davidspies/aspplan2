@@ -129,7 +129,7 @@ onSideOf(subgoal(F),t,cut2) :- subgoal(F).
 not_counterexample :- edge(D,E); onSideOf(D,t,C); onSideOf(E,s,C).
 % If a fluent starts on the s-side of cut2 and ends on the t-side, then it
 % "holds over" cut2.
-holdsOver(FO,cut2) :- onSideOf(start(FO),s,cut2); onSideOf(end(FO),t,cut2).
+holdsOver(F,cut2) :- onSideOf(start(fluentOcc(F,M)),s,cut2); onSideOf(end(fluentOcc(F,M)),t,cut2).
 % Similarly if it starts and ends on the same side of cut1, then it
 % doesn't hold over cut1.
 not_holdsOver(FO,cut1) :- onSideOf(start(FO),X,cut1); onSideOf(end(FO),X,cut1).
@@ -142,7 +142,7 @@ not_counterexample :- not_betweenCuts(AO) : happens(AO).
 % If there exists a fluent for which some occurrence holds over cut2, but no
 % occurrence holds over cut1, then this is not a counterexample.
 not_counterexample :-
-  holdsOver(fluentOcc(F,_),cut2);
+  holdsOver(F,cut2);
   not_holdsOver(fluentOcc(F,M),cut1) : holds(fluentOcc(F,M)).
 
 % There should be no counterexample (sorry for the triple negative).
