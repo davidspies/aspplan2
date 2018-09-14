@@ -36,16 +36,16 @@ deletes(actOcc(A,N),fluentOcc(F,M)) :-
 % No fluent may be deleted by more than one action.
 :- {deletes(_, FO)} > 1; is(FO).
 % An action which deletes a fluent, but doesn't have it as a precondition
-% supersedes some occurrence (possibly 0) of that fluent.
-{supersedes(actOcc(A,N),fluentOcc(F,M)) : holds(fluentOcc(F,M));
-  supersedes(actOcc(A,N),fluentOcc(F,0))
+% follows some occurrence (possibly 0) of that fluent.
+{follows(actOcc(A,N),fluentOcc(F,M)) : holds(fluentOcc(F,M));
+  follows(actOcc(A,N),fluentOcc(F,0))
   }=1 :- del(A,F); not pre(A,F); happens(actOcc(A,N)).
 % Fluent occurrences 0 which aren't initial fluents count as "deleted".
 deleted(fluentOcc(F,0)) :- fluent(F); not init(F).
 % A fluent is deleted if something deletes it.
 deleted(FO) :- deletes(_, FO).
-% A fluent is deleted if something supersedes it.
-deleted(FO) :- supersedes(_, FO).
+% A fluent is deleted if something follows it.
+deleted(FO) :- follows(_, FO).
 
 % Weak constraint charging the cost of an action occurrence.
 :~ happens(actOcc(A,N)); cost(A,V).[V,A,N]
@@ -89,10 +89,10 @@ edge(start(FO),AO) :- permits(FO,AO).
 % If a fluent permits an action but doesn't delete it, then the action happens
 % before the end of the fluent.
 edge(AO,end(FO)) :- permits(FO,AO); not deletes(AO,FO).
-% An action happens after the fluent it supersedes
-edge(end(FO),AO) :- supersedes(AO,FO).
+% An action happens after the fluent it follows
+edge(end(FO),AO) :- follows(AO,FO).
 % but before the next occurrence
-edge(AO,start(GO)) :- supersedes(AO,FO); nextOcc(FO,GO); holds(GO).
+edge(AO,start(GO)) :- follows(AO,FO); nextOcc(FO,GO); holds(GO).
 % The start of the next occurrence of a fluent happens after the end of the
 % previous occurrence
 edge(end(FO),start(GO)) :- holds(GO); nextOcc(FO,GO).
