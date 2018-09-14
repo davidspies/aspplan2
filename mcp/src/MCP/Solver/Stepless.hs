@@ -15,6 +15,7 @@ import qualified Data.Map                      as Map
 import           Data.Maybe
 import qualified Data.Text.Lazy                as LText
 import           Debug.Trace                    ( traceShowM )
+import           GHC.Stack                      ( HasCallStack )
 import           System.FilePath                ( (</>) )
 
 import           IData.Graph
@@ -102,5 +103,8 @@ constructGraph syms = mkGraph verts edges
   edges   = mapMaybe getEdge syms
   getEdge = \case
     Clingo.PureFunction "edge" [x, y] True ->
-      Just (inVerts Map.! x, inVerts Map.! y)
+      Just (inVerts ! x, inVerts ! y)
     _ -> Nothing
+
+(!) :: HasCallStack => (Ord k, Show k) => Map k v -> k -> v
+(!) m k = fromMaybe (error $ "Could not find key: " ++ show k) $ m Map.!? k

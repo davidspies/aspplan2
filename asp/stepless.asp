@@ -37,7 +37,7 @@ deletes(actOcc(A,N),fluentOcc(F,M)) :-
 :- {deletes(_, FO)} > 1; is(FO).
 % An action which deletes a fluent, but doesn't have it as a precondition
 % supersedes some occurrence (possibly 0) of that fluent.
-{supersedes(actOcc(A,N),fluentOcc(F,M)) : is(fluentOcc(F,M));
+{supersedes(actOcc(A,N),fluentOcc(F,M)) : holds(fluentOcc(F,M));
   supersedes(actOcc(A,N),fluentOcc(F,0))
   }=1 :- del(A,F); not pre(A,F); happens(actOcc(A,N)).
 % Fluent occurrences 0 which aren't initial fluents count as "deleted".
@@ -61,6 +61,7 @@ deleted(FO) :- supersedes(_, FO).
 % Events in the graph; these will be grouped into vertices
 event(start(FO)) :- holds(FO).
 event(end(FO)) :- holds(FO).
+event(end(fluentOcc(F,0))) :- fluent(F).
 event(AO) :- happens(AO).
 % subgoals are events
 event(subgoal(F)) :- subgoal(F).
@@ -91,10 +92,10 @@ edge(AO,end(FO)) :- permits(FO,AO); not deletes(AO,FO).
 % An action happens after the fluent it supersedes
 edge(end(FO),AO) :- supersedes(AO,FO).
 % but before the next occurrence
-edge(AO,start(GO)) :- supersedes(AO,FO); nextOcc(FO,GO).
+edge(AO,start(GO)) :- supersedes(AO,FO); nextOcc(FO,GO); holds(GO).
 % The start of the next occurrence of a fluent happens after the end of the
 % previous occurrence
-edge(end(FO),start(GO)) :- holds(FO); holds(GO); nextOcc(FO,GO).
+edge(end(FO),start(GO)) :- holds(GO); nextOcc(FO,GO).
 % The next occurrence of an action happens after the previous occurrence
 edge(AO,BO) :- happens(AO); happens(BO); nextOcc(AO,BO).
 
