@@ -82,48 +82,46 @@ action = parens $ do
   void $ string ":action"
   name       <- identifier
   parameters <- do
-    isParams <- option False (try $ string ":parameters" >> return True)
+    isParams <- option False (trystring ":parameters" >> return True)
     if isParams then parens $ typedList variable else return []
   void $ string ":precondition"
-  preconditions <- emptyOr (gd term)
+  preconditions <- parens $ emptyOr (gd term)
   void $ string ":effect"
-  effects <- emptyOr effects'
+  effects <- parens $ emptyOr effects'
   return $ Action {..}
 
 emptyOr :: Parser [a] -> Parser [a]
-emptyOr v = (try (string "()") >> return []) <|> v
+emptyOr v = v <|> return []
 
 term :: Parser Term
 term = (TVar <$> variable) <|> (TName <$> identifier)
 
 effects' :: Parser [Effect]
-effects' =
-  try (parens $ void (string "and") >> many effect) <|> ((: []) <$> effect)
+effects' = (void (trystring "and") >> many effect) <|> ((: []) <$> effect)
 
 numericFormula :: Parser NumericFormula
-numericFormula = (NumConst <$> number) <|> (NumVar <$> atomicFormula term)
+numericFormula =
+  (NumConst <$> number) <|> (NumVar <$> parens (atomicFormula term))
 
 effect :: Parser Effect
 effect =
-  try
-      (   parens
-      $   (do
-            void $ string "not"
-            Del <$> atomicFormula term
-          )
-      <|> (do
-            void $ string "increase"
-            void $ parens $ string "total-cost"
-            Cost <$> numericFormula
-          )
-      )
+  parens
+    $   (do
+          void $ trystring "not"
+          Del <$> parens (atomicFormula term)
+        )
+    <|> (do
+          void $ trystring "increase"
+          void $ parens $ string "total-cost"
+          Cost <$> numericFormula
+        )
     <|> (Add <$> atomicFormula term)
 
 requirement :: Parser Requirement
 requirement = do
   void $ char ':'
   msum $ map
-    (\(s, r) -> try $ string s >> pure r)
+    (\(s, r) -> trystring s >> pure r)
     [ (LText.fromStrict $ titleToDash $ Text.pack $ show req, req)
     | req <- [minBound .. maxBound]
     ]

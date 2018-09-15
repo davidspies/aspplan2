@@ -12,6 +12,7 @@ module PDDLParser.Parse.Shared
   , taggedItem
   , taggedList
   , taggedListItem
+  , trystring
   , typedList
   )
 where
@@ -56,6 +57,9 @@ caseInsensitiveChar c = char (toLower c) <|> char (toUpper c)
 string :: Text -> Parser Text
 string = lexeme . fmap Text.pack . mapM caseInsensitiveChar . Text.unpack
 
+trystring :: Text -> Parser Text
+trystring = try . string
+
 parseOrErr :: Parsec Text () a -> String -> Text -> a
 parseOrErr p filename = either (error . show) id . parse p filename
 
@@ -97,15 +101,14 @@ typedList v = go []
 
 gd :: Parser t -> Parser [Formula t]
 gd t =
-  try
-      (parens $ do
-        void $ string "and"
-        concat <$> many (gd t)
+      (do
+        void $ trystring "and"
+        concat <$> many (parens $ gd t)
       )
     <|> ((: []) <$> atomicFormula t)
 
 atomicFormula :: Parser t -> Parser (Formula t)
-atomicFormula t = parens $ Formula <$> identifier <*> many t
+atomicFormula t = Formula <$> identifier <*> many t
 
 number :: Parser Number
 number = lexeme $ do

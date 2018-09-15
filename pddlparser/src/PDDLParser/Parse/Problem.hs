@@ -12,7 +12,6 @@ import           Prelude                 hiding ( init )
 import           Control.Applicative            ( (<|>) )
 import           Control.Monad
 import           Text.Parsec.Text.Lazy          ( Parser )
-import           Text.Parsec                    ( try )
 
 import           PDDLParser.Parse.Shared
 import           PDDLParser.PDDL
@@ -45,7 +44,7 @@ problem d = do
             ++ show domainName'
     objects  <- objects'
     inits    <- inits'
-    goals    <- taggedListItem "goal" (gd identifier)
+    goals    <- taggedListItem "goal" (parens (gd identifier))
     optimize <- isOptimize
     return Problem {name = probName, ..}
 
@@ -53,12 +52,11 @@ inits' :: Parser [Init]
 inits' = taggedList "init" init
 
 init :: Parser Init
-init =
-  try
-      (parens $ do
-        void $ string "="
-        FunctionValue <$> atomicFormula identifier <*> number
-      )
+init = parens $
+    (do
+      void $ trystring "="
+      FunctionValue <$> parens (atomicFormula identifier) <*> number
+    )
     <|> (InitFluent <$> atomicFormula identifier)
 
 objects' :: Parser [Typed Name]
