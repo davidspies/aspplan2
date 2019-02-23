@@ -34,14 +34,3 @@ dependencies:
 
 library:
   source-dirs: src
-
-tests:
-  imap-test:
-    main:                Spec.hs
-    source-dirs:         test
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - imap

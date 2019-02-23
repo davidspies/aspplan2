@@ -53,14 +53,3 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - pddlparser
-
-tests:
-  pddlparser-test:
-    main:                Spec.hs
-    source-dirs:         test
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - pddlparser

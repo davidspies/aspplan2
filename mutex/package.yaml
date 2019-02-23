@@ -53,14 +53,3 @@ ghc-options:
 
 library:
   source-dirs: src
-
-tests:
-  mutex-test:
-    main:                Spec.hs
-    source-dirs:         test
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - mutex
