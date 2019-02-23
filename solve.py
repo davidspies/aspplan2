@@ -16,8 +16,10 @@ def handlestderr(inhandle,outfile):
 
 def main(args,outhandle=sys.stdout,errfile=None):
     proc = subprocess.Popen(
-        [loc + '/.stack-work/install/x86_64-linux/lts-12.5/8.4.3/bin/mcp-exe'] + args,
-        stdout=subprocess.PIPE, stderr=(errfile and subprocess.PIPE), env={'ASP_PATH' : asp_path}
+        [loc + '/.stack-work/install/x86_64-linux/custom-dspies-snapshot-7-ZAyK3hVJpru7/8.6.3/bin/mcp-exe'] + args,
+        stdout=subprocess.PIPE,
+        stderr=(errfile and subprocess.PIPE),
+        env={'ASP_PATH' : asp_path}
         )
     try:
         if errfile is not None:

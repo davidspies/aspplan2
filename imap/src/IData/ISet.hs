@@ -22,6 +22,7 @@ module IData.ISet
 where
 
 import           Data.Coerce                    ( coerce )
+import           Data.IntSet                    ( IntSet )
 import qualified Data.IntSet                   as IntSet
 import           Data.List.NonEmpty             ( NonEmpty )
 import qualified Data.List.NonEmpty            as NonEmpty
@@ -45,7 +46,7 @@ toList :: IsInt k => ISet k -> [k]
 toList (ISet x) = map fromInt $ IntSet.toList x
 
 unions :: [ISet k] -> ISet k
-unions xs = ISet $ IntSet.unions $ coerce xs
+unions xs = ISet $ IntSet.unions (coerce xs :: [IntSet])
 
 isSubsetOf :: ISet k -> ISet k -> Bool
 isSubsetOf (ISet x) (ISet y) = IntSet.isSubsetOf x y

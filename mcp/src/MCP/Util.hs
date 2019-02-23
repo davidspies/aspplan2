@@ -11,6 +11,7 @@ where
 import           Clingo.Control                 ( Clingo )
 import qualified Clingo.Control                as Clingo
 import           Clingo.Model
+import           Clingo.ProgramBuilding
 import qualified Clingo.Solving                as Clingo
 import qualified Clingo.Symbol                 as Clingo
 import           Control.Monad                  ( when )
@@ -32,18 +33,21 @@ type MakeSpan = Integer
 
 stepping :: (MakeSpan -> Clingo s (Maybe b)) -> Clingo s b
 stepping act = fmap fromJust $ firstJustM [(0 :: MakeSpan) ..] $ \i -> do
-  inum <- Clingo.createNumber i
+  inum          <- Clingo.createNumber i
+  backendHandle <- Clingo.backend
 
   when (i > 0) $ do
     Clingo.ground [Clingo.Part "step" [inum]] Nothing
 
-    prevNum   <- Clingo.createNumber (i - 1)
-    queryPrev <- Clingo.createFunction "query" [prevNum] True
+    prevNum      <- Clingo.createNumber (i - 1)
+    queryPrevSym <- Clingo.createFunction "query" [prevNum] True
+    queryPrev    <- atomAspifLiteral <$> atom backendHandle (Just queryPrevSym)
     Clingo.releaseExternal queryPrev
 
   Clingo.cleanup
 
-  queryNow <- Clingo.createFunction "query" [inum] True
+  queryNowSym <- Clingo.createFunction "query" [inum] True
+  queryNow    <- atomAspifLiteral <$> atom backendHandle (Just queryNowSym)
   Clingo.assignExternal queryNow Clingo.TruthTrue
 
   act i

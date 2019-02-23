@@ -18,7 +18,7 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-12.5
+resolver: https://raw.githubusercontent.com/davidspies/snapshots/master/dspies-snapshot-7.yaml
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -40,8 +40,8 @@ packages:
 - pddlparser
 
 extra-deps:
-- git: https://github.com/davidspies/clingo-haskell.git
-  commit: 02d9d6b0b5906168c280ef251a60f4503fed9703
+- git: https://github.com/tsahyt/clingo-haskell
+  commit: b242642db0d65d36430ccf0c58f27f4f23a5d05f
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
