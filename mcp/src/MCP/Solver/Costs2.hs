@@ -17,6 +17,7 @@ import           Control.Concurrent             ( forkOS
                                                 , killThread
                                                 )
 import           Control.Concurrent.STM
+import           Control.Exception             as Exception
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.IO.Class         ( liftIO )
@@ -108,11 +109,13 @@ killable :: IO r -> IO r
 killable act = do
   resultRef <- newEmptyTMVarIO
   thread    <- forkOS $ do
-    res <- act
-    atomically $ putTMVar resultRef res
-  atomically (takeTMVar resultRef) `catchError` \e -> do
-    killThread thread
-    throwError e
+    result <-
+      (Right <$> act) `Exception.catch` (\(e :: SomeException) -> pure $ Left e)
+    atomically $ putTMVar resultRef result
+  result <- atomically (takeTMVar resultRef) `onException` killThread thread
+  case result of
+    Left  err -> Exception.throw err
+    Right val -> pure val
 
 withAsyncKillable :: IO a -> (Async a -> IO b) -> IO b
 withAsyncKillable = withAsync . killable
