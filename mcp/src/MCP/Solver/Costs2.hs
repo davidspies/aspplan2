@@ -9,8 +9,12 @@ import           Clingo.Model                   ( modelSymbols )
 import qualified Clingo.Model                  as Model
 import qualified Clingo.Solving                as Clingo
 import qualified Clingo.Symbol                 as Clingo
-import           Control.Concurrent.Async       ( waitAny
+import           Control.Concurrent.Async       ( Async
+                                                , waitAny
                                                 , withAsync
+                                                )
+import           Control.Concurrent             ( forkOS
+                                                , killThread
                                                 )
 import           Control.Concurrent.STM
 import           Control.Monad
@@ -28,12 +32,12 @@ import           MCP.Solver.Output
 import           MCP.Util
 import           PDDLParser.Translate.Shared    ( ReverseMap )
 
-solve :: ASPInput -> ReverseMap -> (LText.Text -> IO ()) -> IO ()
-solve inp rev continuation = do
-  sv <- newSolutionVar
-  withAsync (variant1 inp sv) $ \v1 -> withAsync (variant2 inp sv) $ \v2 -> do
-    res <- snd <$> waitAny [v1, v2]
-    continuation $ formatSolution rev (syms <$> res)
+solve :: ASPInput -> ReverseMap -> IO LText.Text
+solve inp rev = do
+  sv  <- newSolutionVar
+  res <- withAsyncKillable (variant1 inp sv) $ \v1 ->
+    withAsyncKillable (variant2 inp sv) $ \v2 -> snd <$> waitAny [v1, v2]
+  return $ formatSolution rev $ syms <$> res
 
 data Model = Model
   { syms :: [Clingo.PureSymbol]
@@ -52,7 +56,7 @@ newSolutionVar = atomically $ do
   lowerBound <- newTVar Map.empty
   searching  <- newTVar 0
   bestModel  <- newTVar Nothing
-  return SolutionVar {..}
+  return SolutionVar { .. }
 
 bestLowerBound :: Map MakeSpan Cost -> MakeSpan -> Cost
 bestLowerBound m makeSpan = maybe (Cost []) snd $ Map.lookupLE makeSpan m
@@ -100,6 +104,19 @@ searchingNewLayer makeSpan sv@SolutionVar { searching } =
 maybeCatch :: Functor m => ExceptT err m () -> m (Maybe err)
 maybeCatch act = either Just (\() -> Nothing) <$> runExceptT act
 
+killable :: IO r -> IO r
+killable act = do
+  resultRef <- newEmptyTMVarIO
+  thread    <- forkOS $ do
+    res <- act
+    atomically $ putTMVar resultRef res
+  atomically (takeTMVar resultRef) `catchError` \e -> do
+    killThread thread
+    throwError e
+
+withAsyncKillable :: IO a -> (Async a -> IO b) -> IO b
+withAsyncKillable = withAsync . killable
+
 variant1 :: ASPInput -> SolutionVar -> IO (Maybe Model)
 variant1 inp sv = do
   aspPath <- getASPPath
@@ -115,7 +132,7 @@ variant1 inp sv = do
                   m
                   Model.selectNone { Model.selectShown = True }
                 cost <- lift $ Cost <$> Model.costVector m
-                mapExceptT liftIO $ newBestModel Model {..} sv
+                mapExceptT liftIO $ newBestModel Model { .. } sv
                 lift $ Clingo.solverResume solver
                 go
         go
@@ -145,4 +162,4 @@ variant2 inp sv@SolutionVar { lowerBound } = do
         Just (Left  cost        ) -> newLowerBound makeSpan cost sv
         Just (Right (syms, cost)) -> do
           traceM $ "Variant 2: Found Solution: " ++ show cost
-          throwError $ Just Model {..}
+          throwError $ Just Model { .. }

@@ -140,16 +140,12 @@ runSolve Pipeline { solver, grounded } = do
         (ASPInput [] . Just . LText.toStrict . PP.displayT $ docRules g, rev)
   descr <- evaluate $ force descrU
   traceM "Begin solving"
-  case solver of
-    ASPPlan     -> ASPPlan.solve descr rev >>= putStrLnAndClose
-    CostsSingle -> Costs1.solve descr rev >>= putStrLnAndClose
-    CostsDouble -> Costs2.solve descr rev putStrLnAndClose
-    Stepless    -> Stepless.solve descr rev >>= putStrLnAndClose
-
-putStrLnAndClose :: LText.Text -> IO ()
-putStrLnAndClose s = do
-  LText.putStrLn s
-  hClose stdout
+  result <- case solver of
+    ASPPlan     -> ASPPlan.solve descr rev
+    CostsSingle -> Costs1.solve descr rev
+    CostsDouble -> Costs2.solve descr rev
+    Stepless    -> Stepless.solve descr rev
+  LText.putStrLn result
 
 mutexHandling :: MutexType -> [PureSymbol] -> [PureSymbol]
 mutexHandling mt syms = case mt of
