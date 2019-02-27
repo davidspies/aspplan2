@@ -7,4 +7,5 @@ needed(F,t) :- do(A,t); pre(A,F).
 :- do(A,t);
   holds(F,t-2) : pre(A,F);
   not cleared(G,t-1) : add(A,G),holds(G,t);
-  not needed(H,t-1) : del(A,H).
+  not needed(H,t-1) : del(A,H);
+  t > 1.
