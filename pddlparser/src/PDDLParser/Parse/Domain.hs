@@ -79,14 +79,14 @@ function t = parens $ Function <$> identifier <*> typedList t
 
 action :: Parser Action
 action = parens $ do
-  void $ string ":action"
+  void $ identString ":action"
   name       <- identifier
   parameters <- do
-    isParams <- option False (trystring ":parameters" >> return True)
+    isParams <- option False (tryIdentString ":parameters" >> return True)
     if isParams then parens $ typedList variable else return []
-  void $ string ":precondition"
+  void $ identString ":precondition"
   preconditions <- parens $ emptyOr (gd term)
-  void $ string ":effect"
+  void $ identString ":effect"
   effects <- parens $ emptyOr effects'
   return $ Action {..}
 
@@ -97,7 +97,7 @@ term :: Parser Term
 term = (TVar <$> variable) <|> (TName <$> identifier)
 
 effects' :: Parser [Effect]
-effects' = (void (trystring "and") >> many effect) <|> ((: []) <$> effect)
+effects' = (void (tryIdentString "and") >> many effect) <|> ((: []) <$> effect)
 
 numericFormula :: Parser NumericFormula
 numericFormula =
@@ -107,12 +107,12 @@ effect :: Parser Effect
 effect =
   parens
     $   (do
-          void $ trystring "not"
+          void $ tryIdentString "not"
           Del <$> parens (atomicFormula term)
         )
     <|> (do
-          void $ trystring "increase"
-          void $ parens $ string "total-cost"
+          void $ tryIdentString "increase"
+          void $ parens $ identString "total-cost"
           Cost <$> numericFormula
         )
     <|> (Add <$> atomicFormula term)
@@ -121,7 +121,7 @@ requirement :: Parser Requirement
 requirement = do
   void $ char ':'
   msum $ map
-    (\(s, r) -> trystring s >> pure r)
+    (\(s, r) -> tryIdentString s >> pure r)
     [ (LText.fromStrict $ titleToDash $ Text.pack $ show req, req)
     | req <- [minBound .. maxBound]
     ]

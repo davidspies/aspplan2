@@ -3,6 +3,7 @@
 module PDDLParser.Parse.Shared
   ( atomicFormula
   , gd
+  , identString
   , identifier
   , number
   , parens
@@ -12,6 +13,7 @@ module PDDLParser.Parse.Shared
   , taggedItem
   , taggedList
   , taggedListItem
+  , tryIdentString
   , trystring
   , typedList
   )
@@ -30,13 +32,16 @@ import qualified Text.Parsec.Token             as P
 
 import           PDDLParser.PDDL
 
+pddlIdentChar :: Parsec Text st Char
+pddlIdentChar = alphaNum <|> char '-' <|> char '_'
+
 pddlTokens :: P.GenTokenParser Text st Identity
 pddlTokens = P.makeTokenParser P.LanguageDef
   { commentStart  = ""
   , commentEnd    = ""
   , commentLine   = ";"
   , identStart    = letter
-  , identLetter   = alphaNum <|> char '-' <|> char '_'
+  , identLetter   = pddlIdentChar
   , reservedNames = ["and", "not", "increase"]
   , caseSensitive = False
   }
@@ -59,6 +64,15 @@ string = lexeme . fmap Text.pack . mapM caseInsensitiveChar . Text.unpack
 
 trystring :: Text -> Parser Text
 trystring = try . string
+
+identString :: Text -> Parser Text
+identString x = lexeme $  do
+  res <- fmap Text.pack $ mapM caseInsensitiveChar $ Text.unpack x
+  notFollowedBy pddlIdentChar
+  return res
+
+tryIdentString :: Text -> Parser Text
+tryIdentString = try . identString
 
 parseOrErr :: Parsec Text () a -> String -> Text -> a
 parseOrErr p filename = either (error . show) id . parse p filename
@@ -90,7 +104,7 @@ typedList v = go []
     = (do
         void $ string "-"
         ts <-
-          parens (string "either" >> many identifier)
+          parens (identString "either" >> many identifier)
             <|> ((: []) <$> identifier)
         (map (`Typed` ts) currentTerms ++) <$> go []
       )
@@ -102,7 +116,7 @@ typedList v = go []
 gd :: Parser t -> Parser [Formula t]
 gd t =
       (do
-        void $ trystring "and"
+        void $ tryIdentString "and"
         concat <$> many (parens $ gd t)
       )
     <|> ((: []) <$> atomicFormula t)

@@ -26,12 +26,12 @@ problem :: Maybe Domain -> Parser Problem
 problem d = do
   whiteSpace
   parens $ do
-    void $ string "define"
+    void $ identString "define"
     probName <- parens $ do
-      void $ string "problem"
+      void $ identString "problem"
       identifier
     parens $ do
-      void $ string ":domain"
+      void $ identString ":domain"
       domainName' <- identifier
       case d of
         Nothing -> pure ()
@@ -66,7 +66,7 @@ isOptimize :: Parser Bool
 isOptimize = fmap
   (fromMaybe False)
   (taggedItem "metric" $ do
-    void $ string "minimize"
-    void $ parens $ string "total-cost"
+    void $ identString "minimize"
+    void $ parens $ identString "total-cost"
     return True
   )
