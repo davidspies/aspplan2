@@ -84,7 +84,8 @@ actionTriggers(AO,end(FO)) :- deletes(AO,FO).
 
 % Vertices
 % If no action triggers an event, then it gets a vertex by itself.
-vertex(V) :- event(V); not actionTriggers(A,V) : is(A).
+triggered(V) :- actionTriggers(A,V).
+vertex(V) :- event(V); not triggered(V).
 % Otherwise it belongs to the vertex for its trigger action.
 inVertex(E,V) :- actionTriggers(V,E).
 % Every event which is the name of a vertex belongs to that vertex.
@@ -98,7 +99,9 @@ edge(start(FO),end(FO)) :- holds(FO).
 edge(start(FO),AO) :- permits(FO,AO).
 % If a fluent permits an action but the action doesn't delete the
 % fluent, then the action happens before the end of the fluent.
-edge(AO,end(FO)) :- permits(FO,AO); not deletes(AO,FO).
+edge(actOcc(A,N),end(fluentOcc(F,M))) :-
+  permits(fluentOcc(F,M),actOcc(A,N)); not del(A,F).
+edge(subgoal(F),end(fluentOcc(F,M))) :- permits(fluentOcc(F,M),subgoal(F)).
 % An action happens after the fluent it follows
 edge(end(FO),AO) :- follows(AO,FO).
 % but before the next occurrence
