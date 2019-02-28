@@ -1,0 +1,8 @@
+tag: Solve
+contents:
+  grounded:
+    input:
+      files:
+        - "upgame.asp"
+    mutexType: None
+  solver: Stepless
