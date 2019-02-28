@@ -29,6 +29,6 @@ contents:
         # contents: "../thesis/planner/domains/ipc2004/AIRPORT/NONTEMPORAL/STRIPS/P15_AIRPORT3_P3.PDDL"
     mutexType: None
   solver:
-    tag: CostsDouble
-    # contents:
-    #   useUSC: True
+    tag: Stepless
+    contents:
+      useUSC: True

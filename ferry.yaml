@@ -1,5 +1,6 @@
-tag: Ground
+tag: Solve
 contents:
+  grounded:
     input:
       tag: DomainProblem
       domain:
@@ -9,3 +10,7 @@ contents:
         tag: PDDLProblem
         contents: ferryprob.pddl
     mutexType: None
+  solver:
+    tag: Stepless
+    contents:
+      useUSC: True

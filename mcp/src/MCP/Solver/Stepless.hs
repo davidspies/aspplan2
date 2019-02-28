@@ -13,8 +13,9 @@ import           Control.Monad                  ( forM )
 import           Data.Map                       ( Map )
 import qualified Data.Map                      as Map
 import           Data.Maybe
+import           Data.Text                      ( Text )
 import qualified Data.Text.Lazy                as LText
-import           Debug.Trace                    ( traceShowM )
+import           Debug.Trace
 import           GHC.Stack                      ( HasCallStack )
 import           System.FilePath                ( (</>) )
 
@@ -25,9 +26,6 @@ import           MCP.Config
 import           MCP.Solver.Output              ( actionStatement )
 import           MCP.Util
 import           PDDLParser.Translate.Shared    ( ReverseMap )
-
-(<&>) :: Functor f => f a -> (a -> b) -> f b
-(<&>) = flip (<$>)
 
 solve :: SteplessOptions -> ASPInput -> ReverseMap -> IO LText.Text
 solve SteplessOptions { useUSC } inp rev = do
@@ -54,19 +52,32 @@ solve SteplessOptions { useUSC } inp rev = do
         Nothing                     -> return Nothing
         Just (syms, cost, suffUsed) -> do
           traceShowM cost
-          if suffUsed then go (incrementOccs syms occs) else return (Just syms)
-  go Map.empty <&> \case
-    Nothing -> "No Solution"
-    Just syms ->
-      let
-        LabeledGraph g labels = constructGraph syms
+          if suffUsed
+            then do
+              traceM $ LText.unpack (buildSolution rev (Just syms))
+              go (incrementOccs syms occs)
+            else return (Just syms)
+  buildSolution rev <$> go Map.empty
+
+buildSolution :: ReverseMap -> Maybe [Clingo.PureSymbol] -> LText.Text
+buildSolution rev = \case
+  Nothing -> "No Solution"
+  Just syms ->
+    let LabeledGraph g labels = constructGraph syms
         actionSym             = \case
-          Clingo.PureFunction "actOcc" [act, _] True -> Just act
+          Normal (Clingo.PureFunction "actOcc" [act, _] True) ->
+            Just (Normal act)
+          Suffix (Clingo.PureFunction "happens" [act] True) ->
+            Just (Suffix act)
           _ -> Nothing
         sortedVerts = mapMaybe (actionSym . (labels IMap.!)) $ topologicSort g
-      in
-        LText.unlines
-          $ mapMaybe (fmap LText.fromStrict . actionStatement rev) sortedVerts
+    in  LText.unlines
+          $ mapMaybe (fmap LText.fromStrict . actionStatement' rev) sortedVerts
+
+actionStatement' :: ReverseMap -> PlanVertex -> Maybe Text
+actionStatement' rev = \case
+  Normal x -> actionStatement rev x
+  Suffix x -> ("suffix " <>) <$> actionStatement rev x
 
 type OccurrenceMap = Map Clingo.PureSymbol Integer
 
@@ -91,20 +102,43 @@ incrementOccs syms = incrEach $ mapMaybe saturatedOccurrence syms
 incrEach :: Ord a => [a] -> Map a Integer -> Map a Integer
 incrEach = Map.unionWith (\_ oldVal -> oldVal + 1) . Map.fromList . map (, 2)
 
-constructGraph :: [Clingo.PureSymbol] -> LabeledGraph Clingo.PureSymbol
+data PlanVertex = Normal Clingo.PureSymbol | Suffix Clingo.PureSymbol
+  deriving (Eq, Ord, Show)
+
+constructGraph :: [Clingo.PureSymbol] -> LabeledGraph PlanVertex
 constructGraph syms = mkGraph verts edges
  where
   verts   = mapMaybe getVert syms
   getVert = \case
-    Clingo.PureFunction "vertex" [vert] True -> Just vert
+    Clingo.PureFunction "vertex" [vert] True -> Just (Normal vert)
+    Clingo.PureFunction "suffix" [vert@(Clingo.PureFunction "holds" _ True)] True
+      -> Just (Suffix vert)
+    Clingo.PureFunction "suffix" [vert@(Clingo.PureFunction "happens" _ True)] True
+      -> Just (Suffix vert)
     _ -> Nothing
   inVerts   = Map.fromList $ mapMaybe getInVert syms
   getInVert = \case
-    Clingo.PureFunction "inVertex" [x, y] True -> Just (x, y)
+    Clingo.PureFunction "inVertex" [x, y] True -> Just (Normal x, Normal y)
     _ -> Nothing
   edges   = mapMaybe getEdge syms
   getEdge = \case
-    Clingo.PureFunction "edge" [x, y] True -> Just (inVerts ! x, inVerts ! y)
+    Clingo.PureFunction "edge" [x, y] True ->
+      Just (inVerts ! Normal x, inVerts ! Normal y)
+    Clingo.PureFunction "suffix" [Clingo.PureFunction "causes" [x, y] True] True
+      -> Just
+        ( Suffix (Clingo.PureFunction "happens" [x] True)
+        , Suffix (Clingo.PureFunction "holds" [y] True)
+        )
+    Clingo.PureFunction "suffix" [Clingo.PureFunction "permits" [x, y] True] True
+      -> Just
+        ( Suffix (Clingo.PureFunction "holds" [x] True)
+        , Suffix (Clingo.PureFunction "happens" [y] True)
+        )
+    Clingo.PureFunction "permits" [x, Clingo.PureFunction "subgoal" [y] True] True
+      -> Just
+        ( Normal (Clingo.PureFunction "holds" [x] True)
+        , Suffix (Clingo.PureFunction "holds" [y] True)
+        )
     _ -> Nothing
 
 (!) :: HasCallStack => (Ord k, Show k) => Map k v -> k -> v
