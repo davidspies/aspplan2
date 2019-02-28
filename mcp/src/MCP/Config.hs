@@ -8,8 +8,12 @@ import           Data.Aeson                     ( FromJSON
 import qualified Data.Aeson                    as JSON
 import           GHC.Generics                   ( Generic )
 
-data Solver = ASPPlan | CostsSingle | CostsDouble | Stepless
+data Solver = ASPPlan | CostsSingle | CostsDouble | Stepless SteplessOptions
   deriving (Show, Generic, FromJSON, ToJSON)
+
+newtype SteplessOptions = SteplessOptions {useUSC :: Bool}
+  deriving stock (Show, Generic)
+  deriving anyclass (FromJSON, ToJSON)
 
 data MutexType = None | Direct | Multicliques
   deriving (Show, Generic, FromJSON, ToJSON)

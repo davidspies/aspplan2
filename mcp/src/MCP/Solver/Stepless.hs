@@ -21,7 +21,7 @@ import           System.FilePath                ( (</>) )
 import           IData.Graph
 import qualified IData.IMap                    as IMap
 import           MCP.ASPInput
-import           MCP.Config                     ( ASPFile(ASPFile) )
+import           MCP.Config
 import           MCP.Solver.Output              ( actionStatement )
 import           MCP.Util
 import           PDDLParser.Translate.Shared    ( ReverseMap )
@@ -29,25 +29,27 @@ import           PDDLParser.Translate.Shared    ( ReverseMap )
 (<&>) :: Functor f => f a -> (a -> b) -> f b
 (<&>) = flip (<$>)
 
-solve :: ASPInput -> ReverseMap -> IO LText.Text
-solve inp rev = do
+solve :: SteplessOptions -> ASPInput -> ReverseMap -> IO LText.Text
+solve SteplessOptions { useUSC } inp rev = do
   aspPath <- getASPPath
   let
     go occs = do
       result <-
-        Clingo.withClingo (ClingoSetting ["--opt-strategy=usc"] Nothing 0) $ do
-          parts <- partsFrom occs
-          setup
-            (inp <> ASPInput [ASPFile $ aspPath </> "stepless.asp"] Nothing)
-            parts
-          Clingo.ground parts Nothing
-          solveAwaitLastModel Nothing $ \m -> do
-            useSuffix    <- Clingo.createFunction "useSuffix" [] True
-            hasUseSuffix <- m `contains` useSuffix
-            syms         <- modelSymbols m selectNone { selectShown = True }
-            let pureSyms = map Clingo.toPureSymbol syms
-            cost <- Cost <$> costVector m
-            return (pureSyms, cost, hasUseSuffix)
+        Clingo.withClingo
+            (ClingoSetting [ "--opt-strategy=usc" | useUSC ] Nothing 0)
+          $ do
+              parts <- partsFrom occs
+              setup
+                (inp <> ASPInput [ASPFile $ aspPath </> "stepless.asp"] Nothing)
+                parts
+              Clingo.ground parts Nothing
+              solveAwaitLastModel Nothing $ \m -> do
+                useSuffix    <- Clingo.createFunction "useSuffix" [] True
+                hasUseSuffix <- m `contains` useSuffix
+                syms         <- modelSymbols m selectNone { selectShown = True }
+                let pureSyms = map Clingo.toPureSymbol syms
+                cost <- Cost <$> costVector m
+                return (pureSyms, cost, hasUseSuffix)
       case result of
         Nothing                     -> return Nothing
         Just (syms, cost, suffUsed) -> do
@@ -102,8 +104,7 @@ constructGraph syms = mkGraph verts edges
     _ -> Nothing
   edges   = mapMaybe getEdge syms
   getEdge = \case
-    Clingo.PureFunction "edge" [x, y] True ->
-      Just (inVerts ! x, inVerts ! y)
+    Clingo.PureFunction "edge" [x, y] True -> Just (inVerts ! x, inVerts ! y)
     _ -> Nothing
 
 (!) :: HasCallStack => (Ord k, Show k) => Map k v -> k -> v

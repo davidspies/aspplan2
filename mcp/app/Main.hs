@@ -141,10 +141,10 @@ runSolve Pipeline { solver, grounded } = do
   descr <- evaluate $ force descrU
   traceM "Begin solving"
   result <- case solver of
-    ASPPlan     -> ASPPlan.solve descr rev
-    CostsSingle -> Costs1.solve descr rev
-    CostsDouble -> Costs2.solve descr rev
-    Stepless    -> Stepless.solve descr rev
+    ASPPlan       -> ASPPlan.solve descr rev
+    CostsSingle   -> Costs1.solve descr rev
+    CostsDouble   -> Costs2.solve descr rev
+    Stepless opts -> Stepless.solve opts descr rev
   LText.putStrLn result
 
 mutexHandling :: MutexType -> [PureSymbol] -> [PureSymbol]

@@ -5,25 +5,30 @@ contents:
       tag: DomainProblem
       domain:
         tag: PDDLDomain
-        # contents: ../ferry.pddl
-        contents: "../crossing_domain.pddl"
-        # contents: "../ftb/p40-domain.pddl"
-        # contents: "../domains/ipc2008/seq-opt/elevators-strips/p02-domain.pddl"
-        # contents: "../domains/ipc2008/seq-opt/transport-strips/p01-domain.pddl"
+        # contents: tumble_domain.pddl
+        # contents: fifteenpuzzle.pddl
+        # contents: "crossing_domain.pddl"
+        # contents: "../thesis/planner/ftb/p40-domain.pddl"
+        # contents: "../thesis/planner/domains/ipc2008/seq-opt/elevators-strips/p01-domain.pddl"
+        # contents: "../thesis/planner/domains/ipc2008/seq-opt/transport-strips/p01-domain.pddl"
         # contents: "../domains/ipc2008/seq-opt/openstacks-strips/p01-domain.pddl"
         # contents: "../primeWheels/domain.pddl"
-        # contents: "../domains/ipc2008/seq-opt/pegsol-strips/p07-domain.pddl"
-        # contents: "../domains/ipc2004/AIRPORT/NONTEMPORAL/STRIPS/P50_DOMAIN.PDDL"
+        contents: "../thesis/planner/domains/ipc2008/seq-opt/pegsol-strips/p05-domain.pddl"
+        # contents: "../thesis/planner/domains/ipc2004/AIRPORT/NONTEMPORAL/STRIPS/P15_DOMAIN.PDDL"
       problem:
         tag: PDDLProblem
-        # contents: ../ferryprob.pddl
-        contents: "../crossing_prob.pddl"
-        # contents: "../ftb/p40.pddl"
-        # contents: "../domains/ipc2008/seq-opt/elevators-strips/p02.pddl"
-        # contents: "../domains/ipc2008/seq-opt/transport-strips/p01.pddl"
+        # contents: tumble_prob.pddl
+        # contents: fifteenprob.pddl
+        # contents: "crossing_prob.pddl"
+        # contents: "../thesis/planner/ftb/p40.pddl"
+        # contents: "../thesis/planner/domains/ipc2008/seq-opt/elevators-strips/p01.pddl"
+        # contents: "../thesis/planner/domains/ipc2008/seq-opt/transport-strips/p01.pddl"
         # contents: "../domains/ipc2008/seq-opt/openstacks-strips/p01.pddl"
         # contents: "../primeWheels/wheels4.pddl"
-        # contents: "../domains/ipc2008/seq-opt/pegsol-strips/p07.pddl"
-        # contents: "../domains/ipc2004/AIRPORT/NONTEMPORAL/STRIPS/P50_AIRPORT5MUC_P15.PDDL"
-    mutexType: Multicliques
-  solver: CostsDouble
+        contents: "../thesis/planner/domains/ipc2008/seq-opt/pegsol-strips/p05.pddl"
+        # contents: "../thesis/planner/domains/ipc2004/AIRPORT/NONTEMPORAL/STRIPS/P15_AIRPORT3_P3.PDDL"
+    mutexType: None
+  solver:
+    tag: CostsDouble
+    # contents:
+    #   useUSC: True

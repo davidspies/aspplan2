@@ -5,4 +5,7 @@ contents:
       files:
         - "upgame.asp"
     mutexType: None
-  solver: Stepless
+  solver:
+    tag: Stepless
+    contents:
+      useUSC: True
