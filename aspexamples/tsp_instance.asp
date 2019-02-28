@@ -1,0 +1,14 @@
+vertex(v(1..5)).
+initial(v(1)).
+adjacent(v(1),v(2)).
+adjacent(v(1),v(5)).
+adjacent(v(4),v(5)).
+adjacent(v(2),v(3)).
+adjacent(v(3),v(4)).
+adjacent(v(4),v(2)).
+distance(edge(v(1),v(2)),4).
+distance(edge(v(1),v(5)),5).
+distance(edge(v(4),v(5)),4).
+distance(edge(v(2),v(3)),2).
+distance(edge(v(3),v(4)),2).
+distance(edge(v(4),v(2)),2).
