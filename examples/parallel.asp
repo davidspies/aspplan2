@@ -11,7 +11,7 @@ holds(F,k) :- goal(F).
 
 holds(F,T) :- do(A,T); pre(A,F).
 
-:- holds(F,0); not init(F,0).
+:- holds(F,0); not init(F).
 
 deleted(F,T) :- do(A,T); del(A,F); not pre(A,F).
 used(F,T) :- do(A,T); pre(A,F); not del(A,F).
