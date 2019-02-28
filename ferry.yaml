@@ -1,0 +1,11 @@
+tag: Ground
+contents:
+    input:
+      tag: DomainProblem
+      domain:
+        tag: PDDLDomain
+        contents: ferry.pddl
+      problem:
+        tag: PDDLProblem
+        contents: ferryprob.pddl
+    mutexType: None
