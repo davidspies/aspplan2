@@ -1,6 +1,7 @@
 action(_preserve(F)) :- fluent(F).
 pre(_preserve(F), F) :- fluent(F).
 add(_preserve(F), F) :- fluent(F).
+preserving(_preserve(F)) :- fluent(F).
 
 step(0..k-1).
 
@@ -21,7 +22,6 @@ used(F,T) :- happens(A,T); pre(A,F); not del(A,F).
 
 % :~ happens(A,T); cost(A,C).[C,happens(A,T)]
 
-preserving(_preserve(F)) :- fluent(F).
 do(A,T) :- happens(A,T); not preserving(A).
 
 #show do/2.
