@@ -4,6 +4,7 @@ contents:
     input:
       files:
         - ferry.asp
+        - examples/add_costs.asp
     mutexType: None
   solver:
     tag: Stepless
