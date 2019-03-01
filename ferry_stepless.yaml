@@ -1,0 +1,11 @@
+tag: Solve
+contents:
+  grounded:
+    input:
+      files:
+        - ferry.asp
+    mutexType: None
+  solver:
+    tag: Stepless
+    contents:
+      useUSC: True
