@@ -4,8 +4,8 @@ contents:
       tag: DomainProblem
       domain:
         tag: PDDLDomain
-        contents: ferry.pddl
+        contents: fifteenpuzzle.pddl
       problem:
         tag: PDDLProblem
-        contents: ferryprob.pddl
-    mutexType: None
+        contents: fifteenprob.pddl
+    mutexType: Multicliques

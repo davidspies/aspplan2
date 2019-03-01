@@ -1,7 +1,3 @@
-#const nlayers=3.
-#const ninputs=4.
-#const bound=-1.
-
 layer(1..nlayers).
 input(1..ninputs).
 

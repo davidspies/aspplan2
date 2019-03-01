@@ -1,5 +1,3 @@
-color_size(red,3;blue,3;green,3).
-
 vertex(1..nverts).
 edge(e(V,W)) :- vertex(V); vertex(W); V < W.
 color(C) :- color_size(C,_).

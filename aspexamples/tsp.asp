@@ -6,6 +6,6 @@ visit(B) :- travel(_, B).
 
 :- not visit(V); vertex(V).
 
-:~ travel(A,B); distance(edge(A,B),W).[W,edge(A,B)]
+:~ travel(A,B); distance(edge(A,B),D).[D,edge(A,B)]
 
 #show travel/2.

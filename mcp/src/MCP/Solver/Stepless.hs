@@ -55,7 +55,8 @@ solve SteplessOptions { useUSC } inp rev = do
           if suffUsed
             then do
               traceM $ LText.unpack (buildSolution rev (Just syms))
-              go (incrementOccs syms occs)
+              let sat = saturatedOccs syms
+              go (incrEach sat occs)
             else return (Just syms)
   buildSolution rev <$> go Map.empty
 
@@ -91,10 +92,10 @@ partsFrom m = do
       <$> sequence [Clingo.unpureSymbol flu, Clingo.createNumber i]
     _ -> error $ "Unknown saturation " ++ show o
 
-incrementOccs :: [Clingo.PureSymbol] -> OccurrenceMap -> OccurrenceMap
-incrementOccs syms = incrEach $ mapMaybe saturatedOccurrence syms
+saturatedOccs :: [Clingo.PureSymbol] -> [Clingo.PureSymbol]
+saturatedOccs = mapMaybe justIfSaturated
  where
-  saturatedOccurrence = \case
+  justIfSaturated = \case
     Clingo.PureFunction "saturated" [arg] True -> Just arg
     _ -> Nothing
 

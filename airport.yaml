@@ -1,0 +1,11 @@
+tag: Ground
+contents:
+    input:
+      tag: DomainProblem
+      domain:
+        tag: PDDLDomain
+        contents: "../thesis/planner/domains/ipc2004/AIRPORT/NONTEMPORAL/STRIPS/P01_DOMAIN.PDDL"
+      problem:
+        tag: PDDLProblem
+        contents: "../thesis/planner/domains/ipc2004/AIRPORT/NONTEMPORAL/STRIPS/P01_AIRPORT1_P1.PDDL"
+    mutexType: Multicliques
