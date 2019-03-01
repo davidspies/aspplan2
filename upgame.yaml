@@ -1,11 +1,6 @@
-tag: Solve
+tag: Ground
 contents:
-  grounded:
     input:
       files:
         - "upgame.asp"
     mutexType: None
-  solver:
-    tag: Stepless
-    contents:
-      useUSC: True
