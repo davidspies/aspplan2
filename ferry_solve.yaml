@@ -1,0 +1,9 @@
+tag: Solve
+contents:
+  grounded:
+    input:
+      files:
+        - ferry.asp
+    mutexType: Multicliques
+  solver:
+    tag: CostsDouble
