@@ -5,22 +5,18 @@ where
 
 import           Clingo.Control                as Clingo
                                          hiding ( solve )
-import           Clingo.Internal.Types          ( ClingoT(..) )
 import           Clingo.Model                   ( modelSymbols )
 import qualified Clingo.Model                  as Model
 import qualified Clingo.Solving                as Clingo
 import qualified Clingo.Symbol                 as Clingo
-import           Control.Concurrent.Async       ( asyncBound
-                                                , waitAny
+import           Control.Concurrent             ( forkOS )
+import           Control.Concurrent.Async       ( waitAny
                                                 , withAsync
                                                 )
 import           Control.Concurrent.STM
-import           Control.Exception             as Exception
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.IO.Class         ( liftIO )
-import           Control.Monad.Reader           ( runReaderT )
-import qualified Control.Monad.Reader          as Reader
 import           Data.Map                       ( Map )
 import qualified Data.Map                      as Map
 import qualified Data.Text.Lazy                as LText
@@ -105,29 +101,18 @@ searchingNewLayer makeSpan sv@SolutionVar { searching } =
 maybeCatch :: Functor m => ExceptT err m () -> m (Maybe err)
 maybeCatch act = either Just (\() -> Nothing) <$> runExceptT act
 
-withClingoKillable :: ClingoSetting -> (forall s . ClingoT IO s r) -> IO r
-withClingoKillable setting act = do
-  interruptActRef <- newEmptyTMVarIO
-  resultRef       <- newEmptyTMVarIO
-  _               <- asyncBound
-    (withClingo
-      setting
-      (do
-        Clingo $ do
-          ctrl <- Reader.ask
-          liftIO $ atomically $ putTMVar interruptActRef $ runReaderT
-            (clingo Clingo.interrupt)
-            ctrl
-        liftIO . atomically . putTMVar resultRef =<< act
-      )
-    )
-  interruptAct <- atomically $ readTMVar interruptActRef
-  atomically (takeTMVar resultRef) `onException` interruptAct
+-- Doesn't block when killed (but leaves the action running)
+withClingoThread :: ClingoSetting -> (forall s . ClingoT IO s r) -> IO r
+withClingoThread setting act = do
+  resultRef <- newEmptyTMVarIO
+  _         <- forkOS
+    (withClingo setting (liftIO . atomically . putTMVar resultRef =<< act))
+  atomically (takeTMVar resultRef)
 
 variant1 :: ASPInput -> SolutionVar -> IO (Maybe Model)
 variant1 inp sv = do
   aspPath <- getASPPath
-  withClingoKillable defaultClingo $ do
+  withClingoThread defaultClingo $ do
     setup (inp <> ASPInput [ASPFile $ aspPath </> "aspplan.asp"] Nothing) []
     stepping $ \makeSpan -> maybeCatch $ do
       mapExceptT liftIO $ searchingNewLayer makeSpan sv
@@ -147,7 +132,7 @@ variant1 inp sv = do
 variant2 :: ASPInput -> SolutionVar -> IO (Maybe Model)
 variant2 inp sv@SolutionVar { lowerBound } = do
   aspPath <- getASPPath
-  withClingoKillable (ClingoSetting [] Nothing 0) $ do
+  withClingoThread (ClingoSetting [] Nothing 0) $ do
     setup
       (inp <> ASPInput [ASPFile $ aspPath </> "aspplan_suffix.asp"] Nothing)
       []
