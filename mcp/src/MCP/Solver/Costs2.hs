@@ -3,24 +3,24 @@ module MCP.Solver.Costs2
   )
 where
 
-import           Clingo.Control                 ( ClingoSetting(ClingoSetting) )
-import qualified Clingo.Control                as Clingo
+import           Clingo.Control                as Clingo
+                                         hiding ( solve )
+import           Clingo.Internal.Types          ( ClingoT(..) )
 import           Clingo.Model                   ( modelSymbols )
 import qualified Clingo.Model                  as Model
 import qualified Clingo.Solving                as Clingo
 import qualified Clingo.Symbol                 as Clingo
-import           Control.Concurrent.Async       ( Async
+import           Control.Concurrent.Async       ( asyncBound
                                                 , waitAny
                                                 , withAsync
-                                                )
-import           Control.Concurrent             ( forkOS
-                                                , killThread
                                                 )
 import           Control.Concurrent.STM
 import           Control.Exception             as Exception
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.IO.Class         ( liftIO )
+import           Control.Monad.Reader           ( runReaderT )
+import qualified Control.Monad.Reader          as Reader
 import           Data.Map                       ( Map )
 import qualified Data.Map                      as Map
 import qualified Data.Text.Lazy                as LText
@@ -36,8 +36,8 @@ import           PDDLParser.Translate.Shared    ( ReverseMap )
 solve :: ASPInput -> ReverseMap -> IO LText.Text
 solve inp rev = do
   sv  <- newSolutionVar
-  res <- withAsyncKillable (variant1 inp sv) $ \v1 ->
-    withAsyncKillable (variant2 inp sv) $ \v2 -> snd <$> waitAny [v1, v2]
+  res <- withAsync (variant1 inp sv)
+    $ \v1 -> withAsync (variant2 inp sv) $ \v2 -> snd <$> waitAny [v1, v2]
   return $ formatSolution rev $ syms <$> res
 
 data Model = Model
@@ -105,25 +105,29 @@ searchingNewLayer makeSpan sv@SolutionVar { searching } =
 maybeCatch :: Functor m => ExceptT err m () -> m (Maybe err)
 maybeCatch act = either Just (\() -> Nothing) <$> runExceptT act
 
-killable :: IO r -> IO r
-killable act = do
-  resultRef <- newEmptyTMVarIO
-  thread    <- forkOS $ do
-    result <-
-      (Right <$> act) `Exception.catch` (\(e :: SomeException) -> pure $ Left e)
-    atomically $ putTMVar resultRef result
-  result <- atomically (takeTMVar resultRef) `onException` killThread thread
-  case result of
-    Left  err -> Exception.throw err
-    Right val -> pure val
-
-withAsyncKillable :: IO a -> (Async a -> IO b) -> IO b
-withAsyncKillable = withAsync . killable
+withClingoKillable :: ClingoSetting -> (forall s . ClingoT IO s r) -> IO r
+withClingoKillable setting act = do
+  interruptActRef <- newEmptyTMVarIO
+  resultRef       <- newEmptyTMVarIO
+  _               <- asyncBound
+    (withClingo
+      setting
+      (do
+        Clingo $ do
+          ctrl <- Reader.ask
+          liftIO $ atomically $ putTMVar interruptActRef $ runReaderT
+            (clingo Clingo.interrupt)
+            ctrl
+        liftIO . atomically . putTMVar resultRef =<< act
+      )
+    )
+  interruptAct <- atomically $ readTMVar interruptActRef
+  atomically (takeTMVar resultRef) `onException` interruptAct
 
 variant1 :: ASPInput -> SolutionVar -> IO (Maybe Model)
 variant1 inp sv = do
   aspPath <- getASPPath
-  Clingo.withDefaultClingo $ do
+  withClingoKillable defaultClingo $ do
     setup (inp <> ASPInput [ASPFile $ aspPath </> "aspplan.asp"] Nothing) []
     stepping $ \makeSpan -> maybeCatch $ do
       mapExceptT liftIO $ searchingNewLayer makeSpan sv
@@ -143,7 +147,7 @@ variant1 inp sv = do
 variant2 :: ASPInput -> SolutionVar -> IO (Maybe Model)
 variant2 inp sv@SolutionVar { lowerBound } = do
   aspPath <- getASPPath
-  Clingo.withClingo (ClingoSetting [] Nothing 0) $ do
+  withClingoKillable (ClingoSetting [] Nothing 0) $ do
     setup
       (inp <> ASPInput [ASPFile $ aspPath </> "aspplan_suffix.asp"] Nothing)
       []
