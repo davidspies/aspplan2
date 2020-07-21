@@ -1,0 +1,450 @@
+fluent(is_parked(airplane_cfbeg,seg_pp_0_60)).
+fluent(is_moving(airplane_cfbeg)).
+fluent(facing(airplane_cfbeg,north)).
+fluent(at_segment(airplane_cfbeg,seg_pp_0_60)).
+fluent(facing(airplane_cfbeg,south)).
+fluent(not_blocked(seg_tww4_0_50,airplane_cfbeg)).
+fluent(not_occupied(seg_tww4_0_50)).
+fluent(at_segment(airplane_cfbeg,seg_rww_0_50)).
+fluent(not_blocked(seg_pp_0_60,airplane_cfbeg)).
+fluent(not_occupied(seg_pp_0_60)).
+fluent(at_segment(airplane_cfbeg,seg_ppdoor_0_40)).
+fluent(not_occupied(seg_twe1_0_200)).
+fluent(not_blocked(seg_tww2_0_50,airplane_cfbeg)).
+fluent(not_occupied(seg_tww2_0_50)).
+fluent(at_segment(airplane_cfbeg,seg_tww3_0_50)).
+fluent(not_blocked(seg_tww3_0_50,airplane_cfbeg)).
+fluent(not_occupied(seg_tww3_0_50)).
+fluent(at_segment(airplane_cfbeg,seg_tww4_0_50)).
+fluent(not_blocked(seg_rww_0_50,airplane_cfbeg)).
+fluent(not_occupied(seg_rww_0_50)).
+fluent(at_segment(airplane_cfbeg,seg_rw_0_400)).
+fluent(not_blocked(seg_tww1_0_200,airplane_cfbeg)).
+fluent(not_occupied(seg_tww1_0_200)).
+fluent(not_blocked(seg_twe1_0_200,airplane_cfbeg)).
+fluent(not_blocked(seg_ppdoor_0_40,airplane_cfbeg)).
+fluent(not_occupied(seg_ppdoor_0_40)).
+fluent(at_segment(airplane_cfbeg,seg_tww1_0_200)).
+fluent(not_blocked(seg_rw_0_400,airplane_cfbeg)).
+fluent(not_occupied(seg_rw_0_400)).
+fluent(at_segment(airplane_cfbeg,seg_rwe_0_50)).
+fluent(not_blocked(seg_twe3_0_50,airplane_cfbeg)).
+fluent(not_occupied(seg_twe3_0_50)).
+fluent(at_segment(airplane_cfbeg,seg_twe2_0_50)).
+fluent(not_blocked(seg_twe2_0_50,airplane_cfbeg)).
+fluent(not_occupied(seg_twe2_0_50)).
+fluent(at_segment(airplane_cfbeg,seg_twe1_0_200)).
+fluent(at_segment(airplane_cfbeg,seg_tww2_0_50)).
+fluent(not_blocked(seg_rwe_0_50,airplane_cfbeg)).
+fluent(not_occupied(seg_rwe_0_50)).
+fluent(at_segment(airplane_cfbeg,seg_twe4_0_50)).
+fluent(not_blocked(seg_twe4_0_50,airplane_cfbeg)).
+fluent(not_occupied(seg_twe4_0_50)).
+fluent(at_segment(airplane_cfbeg,seg_twe3_0_50)).
+action(park_seg_pp_0_60_north(airplane_cfbeg)).
+action(park_seg_pp_0_60_south(airplane_cfbeg)).
+action(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg)).
+action(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg)).
+action(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)).
+action(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg)).
+action(takeoff_seg_rww_0_50_north(airplane_cfbeg)).
+action(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg)).
+action(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg)).
+action(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)).
+action(move_seg_pp_0_60_seg_ppdoor_0_40_north_north_medium(airplane_cfbeg)).
+action(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)).
+action(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg)).
+action(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg)).
+action(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)).
+action(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg)).
+action(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg)).
+action(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg)).
+action(takeoff_seg_rwe_0_50_south(airplane_cfbeg)).
+init(at_segment(airplane_cfbeg,seg_rw_0_400)).
+init(facing(airplane_cfbeg,south)).
+init(is_moving(airplane_cfbeg)).
+init(not_blocked(seg_pp_0_60,airplane_cfbeg)).
+init(not_blocked(seg_ppdoor_0_40,airplane_cfbeg)).
+init(not_blocked(seg_tww1_0_200,airplane_cfbeg)).
+init(not_blocked(seg_twe1_0_200,airplane_cfbeg)).
+init(not_blocked(seg_tww2_0_50,airplane_cfbeg)).
+init(not_blocked(seg_tww3_0_50,airplane_cfbeg)).
+init(not_blocked(seg_tww4_0_50,airplane_cfbeg)).
+init(not_blocked(seg_rww_0_50,airplane_cfbeg)).
+init(not_blocked(seg_twe4_0_50,airplane_cfbeg)).
+init(not_blocked(seg_twe3_0_50,airplane_cfbeg)).
+init(not_blocked(seg_twe2_0_50,airplane_cfbeg)).
+init(not_occupied(seg_pp_0_60)).
+init(not_occupied(seg_ppdoor_0_40)).
+init(not_occupied(seg_tww1_0_200)).
+init(not_occupied(seg_twe1_0_200)).
+init(not_occupied(seg_tww2_0_50)).
+init(not_occupied(seg_tww3_0_50)).
+init(not_occupied(seg_tww4_0_50)).
+init(not_occupied(seg_rww_0_50)).
+init(not_occupied(seg_rwe_0_50)).
+init(not_occupied(seg_twe4_0_50)).
+init(not_occupied(seg_twe3_0_50)).
+init(not_occupied(seg_twe2_0_50)).
+goal(is_parked(airplane_cfbeg,seg_pp_0_60)).
+pre(move_seg_pp_0_60_seg_ppdoor_0_40_north_north_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_pp_0_60_seg_ppdoor_0_40_north_north_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,north)).
+pre(move_seg_pp_0_60_seg_ppdoor_0_40_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_pp_0_60)).
+pre(move_seg_pp_0_60_seg_ppdoor_0_40_north_north_medium(airplane_cfbeg)
+   ,not_occupied(seg_ppdoor_0_40)).
+pre(move_seg_pp_0_60_seg_ppdoor_0_40_north_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_ppdoor_0_40,airplane_cfbeg)).
+pre(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,is_moving(airplane_cfbeg)).
+pre(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,north)).
+pre(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_ppdoor_0_40)).
+pre(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww1_0_200)).
+pre(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww1_0_200,airplane_cfbeg)).
+pre(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe1_0_200)).
+pre(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,is_moving(airplane_cfbeg)).
+pre(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,north)).
+pre(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww1_0_200)).
+pre(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe1_0_200)).
+pre(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe1_0_200,airplane_cfbeg)).
+pre(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_ppdoor_0_40)).
+pre(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,south)).
+pre(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe1_0_200)).
+pre(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe2_0_50)).
+pre(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe2_0_50,airplane_cfbeg)).
+pre(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,south)).
+pre(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe2_0_50)).
+pre(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe3_0_50)).
+pre(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe3_0_50,airplane_cfbeg)).
+pre(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,south)).
+pre(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe3_0_50)).
+pre(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe4_0_50)).
+pre(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe4_0_50,airplane_cfbeg)).
+pre(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,south)).
+pre(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe4_0_50)).
+pre(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg),not_occupied(seg_rwe_0_50)).
+pre(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_rwe_0_50,airplane_cfbeg)).
+pre(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg),facing(airplane_cfbeg,south)).
+pre(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_rwe_0_50)).
+pre(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg),not_occupied(seg_rw_0_400)).
+pre(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_rw_0_400,airplane_cfbeg)).
+pre(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg),facing(airplane_cfbeg,south)).
+pre(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_rw_0_400)).
+pre(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg),not_occupied(seg_rww_0_50)).
+pre(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_rww_0_50,airplane_cfbeg)).
+pre(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg),not_occupied(seg_rwe_0_50)).
+pre(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,south)).
+pre(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_rww_0_50)).
+pre(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg),not_occupied(seg_tww4_0_50)).
+pre(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww4_0_50,airplane_cfbeg)).
+pre(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,north)).
+pre(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww4_0_50)).
+pre(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww3_0_50)).
+pre(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww3_0_50,airplane_cfbeg)).
+pre(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,north)).
+pre(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww3_0_50)).
+pre(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww2_0_50)).
+pre(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww2_0_50,airplane_cfbeg)).
+pre(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,north)).
+pre(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww2_0_50)).
+pre(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww1_0_200)).
+pre(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww1_0_200,airplane_cfbeg)).
+pre(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,is_moving(airplane_cfbeg)).
+pre(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,north)).
+pre(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww1_0_200)).
+pre(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_ppdoor_0_40)).
+pre(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_ppdoor_0_40,airplane_cfbeg)).
+pre(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe1_0_200)).
+pre(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,south)).
+pre(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_ppdoor_0_40)).
+pre(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg),not_occupied(seg_pp_0_60)).
+pre(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_pp_0_60,airplane_cfbeg)).
+pre(takeoff_seg_rww_0_50_north(airplane_cfbeg),at_segment(airplane_cfbeg,seg_rww_0_50)).
+pre(takeoff_seg_rww_0_50_north(airplane_cfbeg),facing(airplane_cfbeg,north)).
+pre(takeoff_seg_rww_0_50_north(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(takeoff_seg_rwe_0_50_south(airplane_cfbeg),at_segment(airplane_cfbeg,seg_rwe_0_50)).
+pre(takeoff_seg_rwe_0_50_south(airplane_cfbeg),facing(airplane_cfbeg,south)).
+pre(takeoff_seg_rwe_0_50_south(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(park_seg_pp_0_60_north(airplane_cfbeg),at_segment(airplane_cfbeg,seg_pp_0_60)).
+pre(park_seg_pp_0_60_north(airplane_cfbeg),facing(airplane_cfbeg,north)).
+pre(park_seg_pp_0_60_north(airplane_cfbeg),is_moving(airplane_cfbeg)).
+pre(park_seg_pp_0_60_south(airplane_cfbeg),at_segment(airplane_cfbeg,seg_pp_0_60)).
+pre(park_seg_pp_0_60_south(airplane_cfbeg),facing(airplane_cfbeg,south)).
+pre(park_seg_pp_0_60_south(airplane_cfbeg),is_moving(airplane_cfbeg)).
+add(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_rww_0_50)).
+add(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg),not_occupied(seg_rw_0_400)).
+add(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_rw_0_400,airplane_cfbeg)).
+add(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_rwe_0_50,airplane_cfbeg)).
+add(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,north)).
+add(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww4_0_50)).
+add(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg),not_occupied(seg_rww_0_50)).
+add(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_rww_0_50,airplane_cfbeg)).
+add(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww3_0_50)).
+add(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww4_0_50)).
+add(takeoff_seg_rww_0_50_north(airplane_cfbeg),not_blocked(seg_tww4_0_50,airplane_cfbeg)).
+add(takeoff_seg_rww_0_50_north(airplane_cfbeg),not_blocked(seg_rww_0_50,airplane_cfbeg)).
+add(takeoff_seg_rww_0_50_north(airplane_cfbeg),not_occupied(seg_rww_0_50)).
+add(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww4_0_50,airplane_cfbeg)).
+add(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww2_0_50)).
+add(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww3_0_50)).
+add(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww3_0_50,airplane_cfbeg)).
+add(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww1_0_200)).
+add(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww2_0_50)).
+add(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww2_0_50,airplane_cfbeg)).
+add(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,south)).
+add(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_ppdoor_0_40)).
+add(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww1_0_200)).
+add(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww2_0_50,airplane_cfbeg)).
+add(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,south)).
+add(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe1_0_200)).
+add(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww1_0_200)).
+add(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww1_0_200,airplane_cfbeg)).
+add(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_ppdoor_0_40,airplane_cfbeg)).
+add(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe2_0_50)).
+add(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe1_0_200)).
+add(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe1_0_200,airplane_cfbeg)).
+add(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww1_0_200,airplane_cfbeg)).
+add(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_pp_0_60)).
+add(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_ppdoor_0_40)).
+add(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_pp_0_60,airplane_cfbeg)).
+add(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,south)).
+add(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww1_0_200)).
+add(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_ppdoor_0_40)).
+add(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe1_0_200,airplane_cfbeg)).
+add(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe3_0_50)).
+add(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe2_0_50)).
+add(park_seg_pp_0_60_south(airplane_cfbeg),not_blocked(seg_ppdoor_0_40,airplane_cfbeg)).
+add(park_seg_pp_0_60_south(airplane_cfbeg),is_parked(airplane_cfbeg,seg_pp_0_60)).
+add(park_seg_pp_0_60_north(airplane_cfbeg),is_parked(airplane_cfbeg,seg_pp_0_60)).
+add(move_seg_pp_0_60_seg_ppdoor_0_40_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_ppdoor_0_40)).
+add(move_seg_pp_0_60_seg_ppdoor_0_40_north_north_medium(airplane_cfbeg),not_occupied(seg_pp_0_60)).
+add(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe2_0_50,airplane_cfbeg)).
+add(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe4_0_50)).
+add(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe3_0_50)).
+add(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe3_0_50,airplane_cfbeg)).
+add(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_rwe_0_50)).
+add(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg),not_occupied(seg_twe4_0_50)).
+add(takeoff_seg_rwe_0_50_south(airplane_cfbeg),not_blocked(seg_twe4_0_50,airplane_cfbeg)).
+add(takeoff_seg_rwe_0_50_south(airplane_cfbeg),not_blocked(seg_rwe_0_50,airplane_cfbeg)).
+add(takeoff_seg_rwe_0_50_south(airplane_cfbeg),not_occupied(seg_rwe_0_50)).
+add(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe4_0_50,airplane_cfbeg)).
+add(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_rw_0_400)).
+add(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg),not_occupied(seg_rwe_0_50)).
+del(move_seg_pp_0_60_seg_ppdoor_0_40_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_pp_0_60)).
+del(move_seg_pp_0_60_seg_ppdoor_0_40_north_north_medium(airplane_cfbeg)
+   ,not_occupied(seg_ppdoor_0_40)).
+del(move_seg_pp_0_60_seg_ppdoor_0_40_north_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_ppdoor_0_40,airplane_cfbeg)).
+del(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_ppdoor_0_40)).
+del(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww1_0_200)).
+del(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww1_0_200,airplane_cfbeg)).
+del(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,north)).
+del(move_seg_ppdoor_0_40_seg_tww1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe1_0_200,airplane_cfbeg)).
+del(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww1_0_200)).
+del(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe1_0_200)).
+del(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe1_0_200,airplane_cfbeg)).
+del(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,north)).
+del(move_seg_tww1_0_200_seg_twe1_0_200_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_ppdoor_0_40,airplane_cfbeg)).
+del(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe1_0_200)).
+del(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe2_0_50)).
+del(move_seg_twe1_0_200_seg_twe2_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe2_0_50,airplane_cfbeg)).
+del(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe2_0_50)).
+del(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe3_0_50)).
+del(move_seg_twe2_0_50_seg_twe3_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe3_0_50,airplane_cfbeg)).
+del(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe3_0_50)).
+del(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_twe4_0_50)).
+del(move_seg_twe3_0_50_seg_twe4_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe4_0_50,airplane_cfbeg)).
+del(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_twe4_0_50)).
+del(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg),not_occupied(seg_rwe_0_50)).
+del(move_seg_twe4_0_50_seg_rwe_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_rwe_0_50,airplane_cfbeg)).
+del(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_rwe_0_50)).
+del(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg),not_occupied(seg_rw_0_400)).
+del(move_seg_rwe_0_50_seg_rw_0_400_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_rw_0_400,airplane_cfbeg)).
+del(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_rw_0_400)).
+del(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg),not_occupied(seg_rww_0_50)).
+del(move_seg_rw_0_400_seg_rww_0_50_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_rww_0_50,airplane_cfbeg)).
+del(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_rww_0_50)).
+del(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg),not_occupied(seg_tww4_0_50)).
+del(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww4_0_50,airplane_cfbeg)).
+del(move_seg_rww_0_50_seg_tww4_0_50_south_north_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,south)).
+del(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww4_0_50)).
+del(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww3_0_50)).
+del(move_seg_tww4_0_50_seg_tww3_0_50_north_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww3_0_50,airplane_cfbeg)).
+del(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww3_0_50)).
+del(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww2_0_50)).
+del(move_seg_tww3_0_50_seg_tww2_0_50_north_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww2_0_50,airplane_cfbeg)).
+del(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww2_0_50)).
+del(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg)
+   ,not_occupied(seg_tww1_0_200)).
+del(move_seg_tww2_0_50_seg_tww1_0_200_north_north_medium(airplane_cfbeg)
+   ,not_blocked(seg_tww1_0_200,airplane_cfbeg)).
+del(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_tww1_0_200)).
+del(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,not_occupied(seg_ppdoor_0_40)).
+del(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_ppdoor_0_40,airplane_cfbeg)).
+del(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,facing(airplane_cfbeg,north)).
+del(move_seg_tww1_0_200_seg_ppdoor_0_40_north_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_twe1_0_200,airplane_cfbeg)).
+del(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg)
+   ,at_segment(airplane_cfbeg,seg_ppdoor_0_40)).
+del(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg),not_occupied(seg_pp_0_60)).
+del(move_seg_ppdoor_0_40_seg_pp_0_60_south_south_medium(airplane_cfbeg)
+   ,not_blocked(seg_pp_0_60,airplane_cfbeg)).
+del(takeoff_seg_rww_0_50_north(airplane_cfbeg),at_segment(airplane_cfbeg,seg_rww_0_50)).
+del(takeoff_seg_rww_0_50_north(airplane_cfbeg),is_moving(airplane_cfbeg)).
+del(takeoff_seg_rwe_0_50_south(airplane_cfbeg),at_segment(airplane_cfbeg,seg_rwe_0_50)).
+del(takeoff_seg_rwe_0_50_south(airplane_cfbeg),is_moving(airplane_cfbeg)).
+del(park_seg_pp_0_60_north(airplane_cfbeg),is_moving(airplane_cfbeg)).
+del(park_seg_pp_0_60_south(airplane_cfbeg),is_moving(airplane_cfbeg)).
+
+
